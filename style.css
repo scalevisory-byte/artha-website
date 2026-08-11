@@ -764,3 +764,24 @@ section{ padding: clamp(64px, 8vw, 104px) 0; position: relative; }
   .grain, .scroll-progress{ display: none !important; }
   .hero-h1-accent{ -webkit-text-fill-color: var(--gold) !important; color: var(--gold) !important; }
 }
+
+/* =========================================================
+   SANSKRIT WORDMARK — अर्थ (Artha)
+   ========================================================= */
+.brand-lockup{ display:inline-flex; align-items:center; gap:10px; }
+.brand-sanskrit{
+  font-family:'Tiro Devanagari Sanskrit', var(--font-display), serif;
+  color: var(--gold); font-size:19px; font-weight:400; line-height:1;
+  position:relative; padding-left:11px; transform:translateY(1px);
+}
+.brand-sanskrit::before{
+  content:''; position:absolute; left:0; top:12%; height:76%; width:1px;
+  background: var(--line-on-dark);
+}
+.hero-sanskrit{
+  position:absolute; right:1.5%; top:50%; transform:translateY(-50%);
+  font-family:'Tiro Devanagari Sanskrit', serif;
+  font-size: min(360px, 36vw); line-height:1; color: var(--gold);
+  opacity:0.055; pointer-events:none; z-index:0; user-select:none; white-space:nowrap;
+}
+@media (max-width:760px){ .hero-sanskrit{ font-size:230px; opacity:0.05; right:-6%; } }
