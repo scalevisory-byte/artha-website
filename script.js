@@ -201,6 +201,27 @@
     });
   });
 
+  /* ---------- Floating WhatsApp greeting bubble ---------- */
+  var waBubble = document.getElementById('waBubble');
+  var waBubbleClose = document.getElementById('waBubbleClose');
+  var waFab = document.querySelector('.wa-fab');
+  var WA_KEY = 'artha_wa_dismissed';
+  if (waBubble) {
+    var dismissed = false;
+    try { dismissed = sessionStorage.getItem(WA_KEY) === '1'; } catch (e) {}
+    if (!dismissed) {
+      window.setTimeout(function () { waBubble.classList.add('show'); }, 3500);
+    }
+    var hideBubble = function () {
+      waBubble.classList.remove('show');
+      try { sessionStorage.setItem(WA_KEY, '1'); } catch (e) {}
+    };
+    if (waBubbleClose) waBubbleClose.addEventListener('click', hideBubble);
+    if (waFab) waFab.addEventListener('click', hideBubble);
+    // auto-hide after a while so it never lingers
+    window.setTimeout(function () { if (waBubble.classList.contains('show')) waBubble.classList.remove('show'); }, 14000);
+  }
+
   /* ---------- Case form -> WhatsApp handoff ---------- */
   var caseForm = document.getElementById('caseForm');
   if (caseForm) {
