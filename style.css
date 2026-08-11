@@ -328,7 +328,10 @@ section{ padding: clamp(64px, 8vw, 104px) 0; position: relative; }
    PROCESS — 5-stage timeline
    ========================================================= */
 .stage-timeline{ list-style:none; margin: 0; padding: 0; display:grid; grid-template-columns: repeat(5, 1fr); gap: 0; position: relative; }
-.stage-timeline::before{ content:''; position:absolute; top: 21px; left: 6%; right: 6%; height: 1px; background: linear-gradient(90deg, var(--gold-deep), var(--gold)); z-index:0; }
+.stage-timeline::before{ content:''; position:absolute; top: 21px; left: 6%; right: 6%; height: 1px; background: linear-gradient(90deg, var(--gold-deep), var(--gold)); z-index:0; transform-origin: left center; }
+.js .stage-timeline::before{ transform: scaleX(0); }
+.js .stage-timeline.activate::before{ animation: lineGrowX 1.1s var(--ease) forwards; }
+@keyframes lineGrowX{ to{ transform: scaleX(1); } }
 .stage{ position: relative; padding: 0 16px; text-align: left; }
 .stage:first-child{ padding-left: 0; }
 .stage-node{ width: 14px; height: 14px; border-radius: 50%; background: var(--ink); border: 2px solid var(--gold); position: relative; z-index: 1; display:block; margin: 15px 0 24px; box-shadow: 0 0 0 6px var(--ink); }
@@ -340,7 +343,9 @@ section{ padding: clamp(64px, 8vw, 104px) 0; position: relative; }
    RECOVERY JOURNEY
    ========================================================= */
 .journey-map{ list-style:none; margin: 0; padding: 0; display:flex; align-items:flex-start; position: relative; }
-.journey-map::before{ content:''; position:absolute; top: 7px; left: 0; right: 0; height: 1px; background: var(--line-on-light); z-index: 0; }
+.journey-map::before{ content:''; position:absolute; top: 7px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--gold), var(--line-on-light)); z-index: 0; transform-origin: left center; }
+.js .journey-map::before{ transform: scaleX(0); }
+.js .journey-map.activate::before{ animation: lineGrowX 1.2s var(--ease) forwards; }
 .jstep{ flex:1; position: relative; text-align:center; padding: 22px 6px 0; }
 .jstep-dot{ position:absolute; top: 0; left:50%; transform: translateX(-50%); width: 15px; height: 15px; border-radius:50%; background: var(--paper); border: 1px solid var(--gold); z-index:1; }
 .jstep-dot::after{ content:''; position:absolute; inset: 3px; border-radius:50%; background: var(--gold); opacity:.35; }
@@ -517,8 +522,8 @@ section{ padding: clamp(64px, 8vw, 104px) 0; position: relative; }
    REVEAL ANIMATIONS
    ========================================================= */
 /* content is visible by default; reveal animation only applies when JS is active */
-.js .reveal{ opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); will-change: opacity, transform; }
-.js .reveal.in{ opacity: 1; transform: none; }
+.js .reveal{ opacity: 0; transform: translateY(26px); filter: blur(7px); transition: opacity .8s var(--ease), transform .8s var(--ease), filter .8s var(--ease); will-change: opacity, transform, filter; }
+.js .reveal.in{ opacity: 1; transform: none; filter: blur(0); }
 .value-grid .reveal, .service-grid .reveal, .industry-grid .reveal, .why-grid .reveal, .faq-list .reveal{ transition-delay: var(--d, 0s); }
 
 /* =========================================================
@@ -577,13 +582,146 @@ section{ padding: clamp(64px, 8vw, 104px) 0; position: relative; }
 }
 
 /* =========================================================
+   PREMIUM ANIMATION LAYER
+   ========================================================= */
+
+/* Scroll progress indicator */
+.scroll-progress{
+  position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 200; pointer-events: none;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold) 60%, var(--gold-soft));
+  box-shadow: 0 0 12px rgba(200,164,93,0.55);
+  transition: width .12s linear;
+}
+
+/* Subtle film grain for an expensive, tactile feel */
+.grain{
+  position: fixed; inset: 0; z-index: 190; pointer-events: none; opacity: 0.5; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* Choreographed hero intro */
+@keyframes heroUp{ from{ opacity:0; transform: translateY(28px); } to{ opacity:1; transform:none; } }
+@keyframes heroCard{ from{ opacity:0; transform: translateY(34px) scale(.97); } to{ opacity:1; transform:none; } }
+.js .hero-anim > *{ opacity: 0; animation: heroUp .95s var(--ease) forwards; }
+.js .hero-anim .eyebrow{ animation-delay: .05s; }
+.js .hero-anim h1{ animation-delay: .16s; }
+.js .hero-anim .hero-sub{ animation-delay: .32s; }
+.js .hero-anim .hero-tagline{ animation-delay: .44s; }
+.js .hero-anim .hero-actions{ animation-delay: .56s; }
+.js .hero-anim .hero-trust{ animation-delay: .68s; }
+.js .hero-anim-card{ opacity: 0; animation: heroCard 1.1s var(--ease) .5s forwards; perspective: 1200px; }
+
+/* Ambient gold glow behind the case card */
+.hero-anim-card{ position: relative; }
+.hero-anim-card::before{
+  content:''; position:absolute; inset: 4% 6%; z-index:-1; border-radius: 40px;
+  background: radial-gradient(circle at 50% 42%, rgba(200,164,93,0.22), transparent 62%);
+  filter: blur(34px); animation: glowPulse 6s ease-in-out infinite;
+}
+@keyframes glowPulse{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
+
+/* Case card float + interactive 3D tilt */
+.hero .case-card{ animation: cardFloat 6.5s ease-in-out infinite; transition: transform .3s var(--ease); transform-style: preserve-3d; }
+@keyframes cardFloat{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-9px); } }
+.hero-anim-card.tilting .case-card{ animation: none; transform: rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg)) translateY(-2px); }
+
+/* Sweeping sheen across the card (slow, faint) */
+.hero .case-card .case-card-head{ position: relative; }
+.hero .case-card::after{
+  background:
+    repeating-linear-gradient(115deg, rgba(200,164,93,0.03) 0 1px, transparent 1px 60px),
+    linear-gradient(105deg, transparent 40%, rgba(248,245,237,0.05) 48%, transparent 56%);
+  background-size: auto, 250% 100%;
+  animation: cardSheen 7s ease-in-out infinite;
+}
+@keyframes cardSheen{ 0%,100%{ background-position: 0 0, 130% 0; } 55%{ background-position: 0 0, -30% 0; } }
+
+/* Gold sheen sweeping the italic accent headline */
+.js .hero-h1-accent{
+  background: linear-gradient(100deg, var(--gold) 24%, var(--gold-soft) 44%, #FFF6E4 50%, var(--gold-soft) 56%, var(--gold) 76%);
+  background-size: 220% auto; -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: sheen 7s linear infinite;
+}
+@keyframes sheen{ to{ background-position: -220% center; } }
+
+/* Shine sweep on gold buttons */
+.btn-gold{ overflow: hidden; }
+.btn-gold::after{
+  content:''; position:absolute; top:0; left:-140%; width: 55%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-20deg); pointer-events: none;
+}
+.btn-gold:hover::after{ animation: btnSweep .85s var(--ease); }
+@keyframes btnSweep{ from{ left:-140%; } to{ left: 150%; } }
+
+/* Premium card hover: lift + glow */
+.value-card, .industry-card, .why-item{ position: relative; transition: background .3s var(--ease), transform .38s var(--ease), box-shadow .38s var(--ease); }
+.value-card:hover, .industry-card:hover, .why-item:hover{ transform: translateY(-5px); box-shadow: 0 26px 44px -28px rgba(14,27,42,0.55); z-index: 2; }
+.value-card .ic-lg, .industry-card .ic-lg{ transition: transform .4s var(--ease), color .3s var(--ease); }
+.value-card:hover .ic-lg, .industry-card:hover .ic-lg{ transform: translateY(-3px) scale(1.08); color: var(--gold); }
+.service-card{ position: relative; }
+.service-card:hover{ transform: translateY(-5px); box-shadow: 0 28px 46px -26px rgba(0,0,0,0.6); z-index: 2; }
+.faq-item summary:hover .faq-icon{ transform: rotate(90deg); transition: transform .3s var(--ease); }
+
+/* Sequential node activation — process timeline */
+.js .stage-node{ transform: scale(0); opacity: 0; transition: transform .55s var(--ease), opacity .4s var(--ease); }
+.js .stage-timeline.activate .stage-node{ transform: scale(1); opacity: 1; }
+.js .stage-timeline.activate .stage:nth-child(1) .stage-node{ transition-delay: .15s; }
+.js .stage-timeline.activate .stage:nth-child(2) .stage-node{ transition-delay: .33s; }
+.js .stage-timeline.activate .stage:nth-child(3) .stage-node{ transition-delay: .51s; }
+.js .stage-timeline.activate .stage:nth-child(4) .stage-node{ transition-delay: .69s; }
+.js .stage-timeline.activate .stage:nth-child(5) .stage-node{ transition-delay: .87s; }
+
+/* Sequential dot activation — journey */
+.js .jstep-dot{ transform: translateX(-50%) scale(0); transition: transform .5s var(--ease); }
+.js .journey-map.activate .jstep-dot{ transform: translateX(-50%) scale(1); }
+.js .journey-map.activate .jstep:nth-child(1) .jstep-dot{ transition-delay: .2s; }
+.js .journey-map.activate .jstep:nth-child(2) .jstep-dot{ transition-delay: .35s; }
+.js .journey-map.activate .jstep:nth-child(3) .jstep-dot{ transition-delay: .5s; }
+.js .journey-map.activate .jstep:nth-child(4) .jstep-dot{ transition-delay: .65s; }
+.js .journey-map.activate .jstep:nth-child(5) .jstep-dot{ transition-delay: .8s; }
+.js .journey-map.activate .jstep:nth-child(6) .jstep-dot{ transition-delay: .95s; }
+.js .journey-map.activate .jstep:nth-child(7) .jstep-dot{ transition-delay: 1.1s; }
+
+/* Cash-flow nodes pop after the line draws */
+.js .cf-nodes circle{ opacity: 0; transform: scale(0); transform-origin: center; transform-box: fill-box; }
+.js .cf-line.draw ~ .cf-nodes circle{ animation: nodePop .5s var(--ease) forwards; }
+.js .cf-line.draw ~ .cf-nodes circle:nth-child(1){ animation-delay: .5s; }
+.js .cf-line.draw ~ .cf-nodes circle:nth-child(2){ animation-delay: .8s; }
+.js .cf-line.draw ~ .cf-nodes circle:nth-child(3){ animation-delay: 1.1s; }
+.js .cf-line.draw ~ .cf-nodes circle:nth-child(4){ animation-delay: 1.4s; }
+.js .cf-line.draw ~ .cf-nodes circle:nth-child(5){ animation-delay: 1.7s; }
+@keyframes nodePop{ to{ opacity: 1; transform: scale(1); } }
+
+/* Nav scroll-spy active state */
+.main-nav a.active{ color: var(--paper); }
+.main-nav a.active::after{ width: 100%; }
+
+/* Vertical mobile timelines draw top-to-bottom */
+@media (max-width: 920px){
+  .js .stage-timeline::before{ transform: scaleY(0); transform-origin: top center; }
+  .js .stage-timeline.activate::before{ animation: lineGrowY 1.1s var(--ease) forwards; }
+  .js .journey-map::before{ transform: scaleY(0); transform-origin: top center; }
+  .js .journey-map.activate::before{ animation: lineGrowY 1.2s var(--ease) forwards; }
+  .hero .case-card{ animation: none; }
+}
+@keyframes lineGrowY{ to{ transform: scaleY(1); } }
+
+/* =========================================================
    REDUCED MOTION
    ========================================================= */
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  .reveal{ opacity: 1 !important; transform: none !important; }
+  .reveal{ opacity: 1 !important; transform: none !important; filter: none !important; }
+  .hero-anim > *, .hero-anim-card{ opacity: 1 !important; animation: none !important; }
   .cf-line{ stroke-dashoffset: 0 !important; }
   .cf-area{ opacity: 1 !important; }
+  .cf-nodes circle{ opacity: 1 !important; transform: none !important; }
   .progress-fill{ width: var(--target) !important; }
+  .stage-node, .jstep-dot{ transform: none !important; opacity: 1 !important; }
+  .js .stage-timeline::before, .js .journey-map::before{ transform: none !important; }
+  .grain, .scroll-progress{ display: none !important; }
+  .hero-h1-accent{ -webkit-text-fill-color: var(--gold) !important; color: var(--gold) !important; }
 }

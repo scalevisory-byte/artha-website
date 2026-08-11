@@ -113,6 +113,82 @@
     }
   }
 
+  /* ---------- Scroll progress bar ---------- */
+  var progressBar = document.getElementById('scrollProgress');
+  if (progressBar) {
+    var ticking = false;
+    var updateBar = function () {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (h.scrollTop || window.scrollY) / max * 100 : 0;
+      progressBar.style.width = pct + '%';
+      ticking = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { window.requestAnimationFrame(updateBar); ticking = true; }
+    }, { passive: true });
+    updateBar();
+  }
+
+  /* ---------- Hero case-card 3D tilt (desktop pointers only) ---------- */
+  var tiltHost = document.querySelector('.hero-anim-card');
+  var tiltCard = tiltHost ? tiltHost.querySelector('.case-card') : null;
+  if (tiltHost && tiltCard && !prefersReduced && window.matchMedia('(pointer:fine)').matches) {
+    var MAX = 5;
+    tiltHost.addEventListener('mousemove', function (e) {
+      var r = tiltHost.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      tiltHost.classList.add('tilting');
+      tiltHost.style.setProperty('--rx', (px * MAX) + 'deg');
+      tiltHost.style.setProperty('--ry', (-py * MAX) + 'deg');
+    });
+    tiltHost.addEventListener('mouseleave', function () {
+      tiltHost.classList.remove('tilting');
+      tiltHost.style.removeProperty('--rx');
+      tiltHost.style.removeProperty('--ry');
+    });
+  }
+
+  /* ---------- Sequential activation for timelines ---------- */
+  var activateEls = document.querySelectorAll('.stage-timeline, .journey-map');
+  if (activateEls.length) {
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      activateEls.forEach(function (el) { el.classList.add('activate'); });
+    } else {
+      var actObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('activate');
+            actObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      activateEls.forEach(function (el) { actObserver.observe(el); });
+    }
+  }
+
+  /* ---------- Nav scroll-spy ---------- */
+  var spyLinks = Array.prototype.slice.call(document.querySelectorAll('.main-nav a[href^="#"]'));
+  var spySections = spyLinks.map(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    return document.getElementById(id);
+  });
+  if (spyLinks.length && 'IntersectionObserver' in window) {
+    var spyObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var idx = spySections.indexOf(entry.target);
+          if (idx > -1) {
+            spyLinks.forEach(function (l) { l.classList.remove('active'); });
+            spyLinks[idx].classList.add('active');
+          }
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    spySections.forEach(function (s) { if (s) spyObserver.observe(s); });
+  }
+
   /* ---------- FAQ: single-open accordion ---------- */
   var faqItems = document.querySelectorAll('.faq-item');
   faqItems.forEach(function (item) {
