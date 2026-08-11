@@ -50,20 +50,21 @@ p{margin:0;}
 .title-sm{font-size:clamp(24px,3.6vw,38px);}
 
 /* COVER */
-.cover{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:80px var(--pad) 60px;position:relative;overflow:hidden;}
+.cover{min-height:100svh;display:flex;position:relative;overflow:hidden;}
+.cover-inner{width:100%;display:flex;flex-direction:column;flex:1;padding-top:clamp(44px,7vh,88px);padding-bottom:clamp(40px,6vh,62px);}
 .cover-wm{position:absolute;right:-4%;top:50%;transform:translateY(-50%);font-family:var(--deva);font-size:min(96vh,90vw);line-height:1;color:var(--bronze);opacity:.04;pointer-events:none;user-select:none;}
-.cover-top{display:flex;align-items:center;gap:14px;margin-bottom:auto;}
+.cover-top{display:flex;align-items:center;gap:14px;}
 .cover-top .mark{width:44px;height:44px;color:var(--bronze);}
 .cover-top .w{font-family:var(--display);font-weight:600;font-size:24px;letter-spacing:0.2em;}
 .cover-top .dv{font-family:var(--deva);color:var(--bronze);font-size:22px;padding-left:12px;border-left:1px solid var(--line);}
-.cover-main{position:relative;z-index:2;}
+.cover-main{position:relative;z-index:2;margin:clamp(52px,14vh,150px) 0 clamp(40px,9vh,110px);}
 .cover-cat{font-family:var(--mono);font-size:clamp(11px,1.5vw,14px);letter-spacing:0.34em;text-transform:uppercase;color:var(--bronze-soft);margin-bottom:26px;}
-.cover-h1{font-family:var(--display);font-size:clamp(40px,7.5vw,86px);font-weight:600;line-height:1.02;letter-spacing:-0.025em;max-width:16ch;}
+.cover-h1{font-family:var(--display);font-size:clamp(38px,6.6vw,78px);font-weight:600;line-height:1.04;letter-spacing:-0.025em;max-width:16ch;}
 .cover-h1 em{font-style:italic;color:var(--bronze-soft);}
 .cover-line{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px 22px;font-family:var(--mono);font-size:12.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
 .cover-line span{display:inline-flex;align-items:center;gap:10px;}
 .cover-line span::before{content:'';width:6px;height:6px;background:var(--bronze);border-radius:50%;}
-.cover-foot{margin-top:64px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted-2);border-top:1px solid var(--hair);padding-top:22px;position:relative;z-index:2;}
+.cover-foot{margin-top:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted-2);border-top:1px solid var(--hair);padding-top:22px;position:relative;z-index:2;}
 
 /* PREVENT RECOVER PROTECT — 3 stage */
 .prp{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:prp;}
@@ -245,20 +246,22 @@ a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--bronze);outline
 <!-- ================= COVER ================= -->
 <header class="cover">
   <div class="cover-wm" aria-hidden="true" lang="sa">अर्थ</div>
-  <div class="cover-top">
-    <svg class="mark" aria-hidden="true"><use href="#mk"></use></svg>
-    <span class="w">ARTHA</span><span class="dv" lang="sa">अर्थ</span>
-  </div>
-  <div class="cover-main">
-    <p class="cover-cat">Commercial Receivables &amp; Recovery Management</p>
-    <h1 class="cover-h1">Recover What Is Yours. <em>Protect</em> What You Earn.</h1>
-    <div class="cover-line">
-      <span>Prevent Payment Defaults</span>
-      <span>Recover Outstanding Receivables</span>
-      <span>Protect Future Cash Flow</span>
+  <div class="wrap cover-inner">
+    <div class="cover-top">
+      <svg class="mark" aria-hidden="true"><use href="#mk"></use></svg>
+      <span class="w">ARTHA</span><span class="dv" lang="sa">अर्थ</span>
     </div>
+    <div class="cover-main">
+      <p class="cover-cat">Commercial Receivables &amp; Recovery Management</p>
+      <h1 class="cover-h1">Recover What Is Yours. <em>Protect</em> What You Earn.</h1>
+      <div class="cover-line">
+        <span>Prevent Payment Defaults</span>
+        <span>Recover Outstanding Receivables</span>
+        <span>Protect Future Cash Flow</span>
+      </div>
+    </div>
+    <div class="cover-foot"><span>Company Profile</span><span>Prevent · Recover · Protect</span><span>artharecovery.in</span></div>
   </div>
-  <div class="cover-foot"><span>Company Profile</span><span>Prevent · Recover · Protect</span><span>artharecovery.in</span></div>
 </header>
 
 <main>
