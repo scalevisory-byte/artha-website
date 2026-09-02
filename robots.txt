@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://artharecovery.in/sitemap.xml
