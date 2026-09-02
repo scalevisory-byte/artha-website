@@ -222,16 +222,51 @@
     window.setTimeout(function () { if (waBubble.classList.contains('show')) waBubble.classList.remove('show'); }, 14000);
   }
 
-  /* ---------- Case form -> WhatsApp handoff ---------- */
+  /* ---------- Case form -> email (FormSubmit) with WhatsApp fallback ---------- */
   var caseForm = document.getElementById('caseForm');
   if (caseForm) {
+    var get = function (n) {
+      var f = caseForm.elements[n];
+      return f ? String(f.value || '').trim() : '';
+    };
+
+    var buildMessage = function () {
+      var lines = [
+        'New recovery case enquiry — ARTHA',
+        '',
+        'Name: ' + get('name'),
+        get('company') ? 'Company: ' + get('company') : null,
+        'Phone: ' + get('phone'),
+        get('email') ? 'Email: ' + get('email') : null,
+        get('amount') ? 'Outstanding amount: ₹' + get('amount') : null,
+        get('overdue') ? 'Days overdue: ' + get('overdue') : null,
+        get('type') ? 'Receivable type: ' + get('type') : null,
+        get('debtor') ? 'Customer / debtor: ' + get('debtor') : null,
+        get('description') ? 'Details: ' + get('description') : null
+      ].filter(Boolean);
+      return lines.join('\n');
+    };
+
+    var waHref = function () {
+      return 'https://wa.me/919909993565?text=' + encodeURIComponent(buildMessage());
+    };
+
+    var showSuccess = function () {
+      var panel = document.createElement('div');
+      panel.className = 'form-success';
+      panel.setAttribute('role', 'status');
+      panel.innerHTML =
+        '<div class="form-success-mark" aria-hidden="true">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>' +
+        '</div>' +
+        '<h3>Thank you — we’ve received your enquiry.</h3>' +
+        '<p>Our team will review your case and respond shortly. For an instant, confidential conversation you can also reach us on WhatsApp.</p>' +
+        '<a class="btn btn-gold" href="' + waHref() + '" target="_blank" rel="noopener">Continue on WhatsApp</a>';
+      caseForm.replaceWith(panel);
+    };
+
     caseForm.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      var get = function (n) {
-        var f = caseForm.elements[n];
-        return f ? String(f.value || '').trim() : '';
-      };
 
       // Minimal required validation (name + phone)
       var name = get('name');
@@ -250,22 +285,26 @@
       });
       if (firstInvalid) { firstInvalid.focus(); return; }
 
-      var lines = [
-        'New recovery case enquiry — ARTHA',
-        '',
-        'Name: ' + name,
-        get('company') ? 'Company: ' + get('company') : null,
-        'Phone: ' + phone,
-        get('email') ? 'Email: ' + get('email') : null,
-        get('amount') ? 'Outstanding amount: ₹' + get('amount') : null,
-        get('overdue') ? 'Days overdue: ' + get('overdue') : null,
-        get('type') ? 'Receivable type: ' + get('type') : null,
-        get('debtor') ? 'Customer / debtor: ' + get('debtor') : null,
-        get('description') ? 'Details: ' + get('description') : null
-      ].filter(Boolean);
+      var btn = caseForm.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = 'Sending…'; }
 
-      var message = encodeURIComponent(lines.join('\n'));
-      window.open('https://wa.me/919909993565?text=' + message, '_blank', 'noopener');
+      var data = new FormData(caseForm);
+      data.append('_subject', 'New Recovery Case Enquiry — ' + (name || 'ARTHA'));
+      data.append('_captcha', 'false');
+      data.append('_template', 'table');
+
+      fetch('https://formsubmit.co/ajax/info@artharecovery.in', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: data
+      })
+      .then(function (r) { return r.json(); })
+      .then(function () { showSuccess(); })
+      .catch(function () {
+        // Network/email failed — never lose the lead: hand off to WhatsApp
+        if (btn) { btn.disabled = false; if (btn.dataset.label) btn.textContent = btn.dataset.label; }
+        window.open(waHref(), '_blank', 'noopener');
+      });
     });
 
     // Clear invalid state as the user types
