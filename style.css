@@ -856,3 +856,20 @@ section{ padding: clamp(64px, 8vw, 104px) 0; position: relative; }
 .legal-note{ background: rgba(184,115,51,0.06); border:1px solid var(--line-on-light); border-left:3px solid var(--gold); border-radius: 8px; padding: 16px 20px; font-size: 15px; color: var(--muted-dark); }
 .legal-note strong{ color: var(--ink-text); }
 .legal-prose h2{ font-size: clamp(20px,2.6vw,26px); }
+
+/* Homepage Insights teaser */
+.insights-teaser{ background: var(--paper); padding: clamp(56px,8vw,96px) 0; }
+.insights-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom: clamp(32px,5vw,52px); }
+.insights-head .section-title{ margin-bottom:0; }
+.insights-all{ color: var(--gold-deep); white-space:nowrap; font-weight:600; text-transform:uppercase; letter-spacing:.08em; font-size:12px; }
+.insights-all:hover{ color: var(--gold); }
+.insights-all .ic{ transition: transform .2s var(--ease); }
+.insights-all:hover .ic{ transform: translateX(4px); }
+.insights-teaser .post-card h3{ font-family: var(--font-display); font-weight:500; font-size: 22px; line-height:1.2; margin:12px 0 12px; letter-spacing:-0.01em; color: var(--ink-text); }
+
+/* Blog breadcrumbs */
+.crumbs{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-family: var(--font-mono); font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+.crumbs a{ color: var(--gold-soft); text-decoration:none; }
+.crumbs a:hover{ color: var(--gold); }
+.crumbs span{ color: var(--muted-light); }
+.crumbs .crumb-current{ color: var(--muted-light-2); }

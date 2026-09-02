@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://artharecovery.in/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://artharecovery.in/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://artharecovery.in/blog/recover-outstanding-payments-from-business-customers.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://artharecovery.in/blog/days-sales-outstanding-dso-explained.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://artharecovery.in/blog/credit-control-prevent-bad-debt.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://artharecovery.in/</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://artharecovery.in/blog/</loc><lastmod>2026-09-02</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://artharecovery.in/blog/recover-outstanding-payments-from-business-customers.html</loc><lastmod>2026-08-18</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://artharecovery.in/blog/days-sales-outstanding-dso-explained.html</loc><lastmod>2026-08-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://artharecovery.in/blog/credit-control-prevent-bad-debt.html</loc><lastmod>2026-09-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
